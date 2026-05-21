@@ -1,15 +1,11 @@
 import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
+from telegram.ext import Application, CommandHandler, CallbackQueryHandler, MessageHandler, filters, ContextTypes
 
-# TOKEN DO BOT
 TOKEN = "8895471840:AAGZ1MQKqMdKKvURT9fmS3F_7znu4hA_uqg"
 
 logging.basicConfig(level=logging.INFO)
 
-# =============================
-# MENSAGEM 1 — O Gancho
-# =============================
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     nome = update.effective_user.first_name
     teclado = [[InlineKeyboardButton("⚡ ESTOU PRONTO", callback_data="msg2")]]
@@ -23,9 +19,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=InlineKeyboardMarkup(teclado)
     )
 
-# =============================
-# MENSAGEM 2 — A História
-# =============================
 async def msg2(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.callback_query.answer()
     teclado = [[InlineKeyboardButton("🔥 O QUE DESCOBRISTE?", callback_data="msg3")]]
@@ -38,9 +31,6 @@ async def msg2(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=InlineKeyboardMarkup(teclado)
     )
 
-# =============================
-# MENSAGEM 3 — A Prova
-# =============================
 async def msg3(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.callback_query.answer()
     teclado = [[InlineKeyboardButton("😱 COMO É POSSÍVEL?", callback_data="msg4")]]
@@ -54,9 +44,6 @@ async def msg3(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=InlineKeyboardMarkup(teclado)
     )
 
-# =============================
-# MENSAGEM 4 — O Sistema
-# =============================
 async def msg4(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.callback_query.answer()
     teclado = [[InlineKeyboardButton("🤖 QUERO ENTRAR", callback_data="msg5")]]
@@ -71,9 +58,6 @@ async def msg4(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=InlineKeyboardMarkup(teclado)
     )
 
-# =============================
-# MENSAGEM 5 — A Escassez
-# =============================
 async def msg5(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.callback_query.answer()
     teclado = [[InlineKeyboardButton("✅ QUERO O LINK", callback_data="msg6")]]
@@ -90,9 +74,6 @@ async def msg5(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=InlineKeyboardMarkup(teclado)
     )
 
-# =============================
-# MENSAGEM 6 — O Link
-# =============================
 async def msg6(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.callback_query.answer()
     await update.callback_query.message.reply_text(
@@ -104,9 +85,6 @@ async def msg6(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "Adds ao canal em 5 minutos. ⚡"
     )
 
-# =============================
-# MENSAGEM 7 — Confirmação (quando enviam a print)
-# =============================
 async def receber_print(update: Update, context: ContextTypes.DEFAULT_TYPE):
     nome = update.effective_user.first_name
     await update.message.reply_text(
@@ -117,22 +95,17 @@ async def receber_print(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "vem a seguir. 🎰"
     )
 
-# =============================
-# INICIAR O BOT
-# =============================
 def main():
     app = Application.builder().token(TOKEN).build()
-
     app.add_handler(CommandHandler("start", start))
-    app.add_handler(CallbackQueryHandler(msg2, pattern="msg2"))
-    app.add_handler(CallbackQueryHandler(msg3, pattern="msg3"))
-    app.add_handler(CallbackQueryHandler(msg4, pattern="msg4"))
-    app.add_handler(CallbackQueryHandler(msg5, pattern="msg5"))
-    app.add_handler(CallbackQueryHandler(msg6, pattern="msg6"))
+    app.add_handler(CallbackQueryHandler(msg2, pattern="^msg2$"))
+    app.add_handler(CallbackQueryHandler(msg3, pattern="^msg3$"))
+    app.add_handler(CallbackQueryHandler(msg4, pattern="^msg4$"))
+    app.add_handler(CallbackQueryHandler(msg5, pattern="^msg5$"))
+    app.add_handler(CallbackQueryHandler(msg6, pattern="^msg6$"))
     app.add_handler(MessageHandler(filters.PHOTO, receber_print))
-
     print("✅ Bot a correr...")
-    app.run_polling()
+    app.run_polling(allowed_updates=Update.ALL_TYPES)
 
 if __name__ == "__main__":
     main()
