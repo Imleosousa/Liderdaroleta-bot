@@ -1,11 +1,14 @@
-import logging
 import asyncio
+import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, MessageHandler, filters, ContextTypes
 
 TOKEN = "8895471840:AAGZ1MQKqMdKKvURT9fmS3F_7znu4hA_uqg"
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    level=logging.INFO
+)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     nome = update.effective_user.first_name
@@ -96,7 +99,7 @@ async def receber_print(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "vem a seguir. 🎰"
     )
 
-async def main():
+def main():
     app = Application.builder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(msg2, pattern="^msg2$"))
@@ -106,7 +109,7 @@ async def main():
     app.add_handler(CallbackQueryHandler(msg6, pattern="^msg6$"))
     app.add_handler(MessageHandler(filters.PHOTO, receber_print))
     print("✅ Bot a correr...")
-    await app.run_polling(allowed_updates=Update.ALL_TYPES)
+    app.run_polling(allowed_updates=Update.ALL_TYPES)
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
