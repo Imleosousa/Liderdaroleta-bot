@@ -1,4 +1,5 @@
 import logging
+import asyncio
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, MessageHandler, filters, ContextTypes
 
@@ -95,7 +96,7 @@ async def receber_print(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "vem a seguir. 🎰"
     )
 
-def main():
+async def main():
     app = Application.builder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(msg2, pattern="^msg2$"))
@@ -105,7 +106,7 @@ def main():
     app.add_handler(CallbackQueryHandler(msg6, pattern="^msg6$"))
     app.add_handler(MessageHandler(filters.PHOTO, receber_print))
     print("✅ Bot a correr...")
-    app.run_polling(allowed_updates=Update.ALL_TYPES)
+    await app.run_polling(allowed_updates=Update.ALL_TYPES)
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
